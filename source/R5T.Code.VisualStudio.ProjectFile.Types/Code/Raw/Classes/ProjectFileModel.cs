@@ -34,6 +34,14 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return projectFile;
         }
 
+        public static ProjectFileModel FromFile(string projectFilePath)
+        {
+            var xElement = XElement.Load(projectFilePath);
+
+            var projectFile = ProjectFileModel.FromXElement(xElement);
+            return projectFile;
+        }
+
         public static ProjectFileModel FromXmlNode(XmlNode xmlNode)
         {
             var xElement = xmlNode.ToXElement();
@@ -59,8 +67,11 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
         public static ProjectFileModel NewNetStandardLibrary()
         {
             var projectFile = ProjectFileModel.New()
-                .AddPropertyGroup()
-                    .AddTargetFramework(TargetFramework.NetStandard_2_0)
+                .AcquirePropertyGroup()
+                    .SetTargetFramework(TargetFramework.NetStandard_2_0)
+                    .SetVersion(Version.Parse("0.0.1"))
+                    .SetGenerateDocumentationFile(true)
+                    .SetNoWarnStandard()
                 .ProjectFile()
                 ;
 

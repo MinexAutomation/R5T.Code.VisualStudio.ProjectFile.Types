@@ -14,8 +14,36 @@ namespace R5T.Code.VisualStudio.ProjectFile.Types.Construction
             //Construction.CreateNewProjectOnlyFileXmlElements();
             //Construction.DeserializeProjectFileXmlElements();
             //Construction.CreateNewProjectOnly();
-            Construction.CreateNewNetStandardLibraryProjectFile();
+            //Construction.CreateNewNetStandardLibraryProjectFile();
             //Construction.DeserializeProjectFile();
+            //Construction.AddProjectAndPackageReferenceToProject();
+            Construction.AddProjectAndPackageReferenceToProjectAgain();
+        }
+
+        private static void AddProjectAndPackageReferenceToProjectAgain()
+        {
+            var inputProjectFilePath = @"C:\Temp\temp-with references.csproj";
+            var outputProjectFilePath = @"C:\Temp\temp-with references, again.csproj";
+
+            var projectFile = ProjectFileModel.FromFile(inputProjectFilePath)
+                .AddPackageReference("HeyHey", Version.Parse("2.3.4"))
+                .AddProjectReference(@"..\..\Yup\Yup\Yup.csproj")
+                ;
+
+            projectFile.Save(outputProjectFilePath);
+        }
+
+        private static void AddProjectAndPackageReferenceToProject()
+        {
+            var inputProjectFilePath = @"C:\Temp\temp.csproj";
+            var outputProjectFilePath = @"C:\Temp\temp-with references.csproj";
+
+            var projectFile = ProjectFileModel.FromFile(inputProjectFilePath)
+                .AddPackageReference("YoYoYo", Version.Parse("1.2.3"))
+                .AddProjectReference(@"..\..\Yo\Yo\Yo.csproj")
+                ;
+
+            projectFile.Save(outputProjectFilePath);
         }
 
         private static void DeserializeProjectFile()

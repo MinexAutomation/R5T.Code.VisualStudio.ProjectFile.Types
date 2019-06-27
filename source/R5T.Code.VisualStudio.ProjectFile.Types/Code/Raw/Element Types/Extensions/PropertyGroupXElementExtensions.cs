@@ -27,5 +27,39 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             propertyGroup.AddTargetFramework(targetFramework, out var dummy);
             return propertyGroup;
         }
+
+        public static PropertyGroupXElement SetTargetFramework(this PropertyGroupXElement propertyGroup, TargetFramework targetFramework)
+        {
+            var standardString = targetFramework.ToStringStandard();
+
+            propertyGroup.Value.AcquireElement(ProjectFileXmlElementNames.TargetFramework, standardString);
+
+            return propertyGroup;
+        }
+
+        public static PropertyGroupXElement SetGenerateDocumentationFile(this PropertyGroupXElement propertyGroup, bool generateDocumentationFile)
+        {
+            var standardString = generateDocumentationFile.ToString().ToLowerInvariant();
+
+            propertyGroup.Value.AcquireElement(ProjectFileXmlElementNames.GenerateDocumentationFile, standardString);
+
+            return propertyGroup;
+        }
+
+        public static PropertyGroupXElement SetNoWarnStandard(this PropertyGroupXElement propertyGroup)
+        {
+            propertyGroup.Value.AcquireElement(ProjectFileXmlElementNames.NoWarn, ProjectFileXmlValues.NoWarnStandard);
+
+            return propertyGroup;
+        }
+
+        public static PropertyGroupXElement SetVersion(this PropertyGroupXElement propertyGroup, Version version)
+        {
+            var standardString = version.ToString();
+
+            propertyGroup.Value.AcquireElement(ProjectFileXmlElementNames.Version, standardString);
+
+            return propertyGroup;
+        }
     }
 }
