@@ -8,5 +8,6 @@
     <ProjectReference Include="..\..\..\R5T.NetStandard.IO.Serialization\source\R5T.NetStandard.IO.Serialization\R5T.NetStandard.IO.Serialization.csproj" />
     <ProjectReference Include="..\..\..\R5T.NetStandard.IO.Types\source\R5T.NetStandard.IO.Types\R5T.NetStandard.IO.Types.csproj" />
     <ProjectReference Include="..\..\..\R5T.NetStandard.Types\source\R5T.NetStandard.Types\R5T.NetStandard.Types.csproj" />
+    <ProjectReference Include="..\..\..\R5T.NetStandard.Xml\source\R5T.NetStandard.Xml\R5T.NetStandard.Xml.csproj" />
   </ItemGroup>
 </Project>

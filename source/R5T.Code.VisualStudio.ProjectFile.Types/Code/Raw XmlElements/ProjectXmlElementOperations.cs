@@ -2,12 +2,12 @@
 using System.Xml;
 
 using R5T.Code.VisualStudio.ProjectFile.Types;
-using R5T.NetStandard;
+using R5T.NetStandard.Xml;
 
 
 namespace R5T.Code.VisualStudio.ProjectFile.Raw.XmlElements
 {
-    public static class ProjectXmlOperations
+    public static class ProjectXmlElementOperations
     {
         public static bool HasProjectElement(XmlDocument projectDocument, out XmlElement projectElement)
         {
@@ -21,13 +21,13 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw.XmlElements
 
         public static bool HasProjectElement(XmlDocument projectDocument)
         {
-            var hasProjectNode = ProjectXmlOperations.HasProjectElement(projectDocument, out var dummy);
+            var hasProjectNode = ProjectXmlElementOperations.HasProjectElement(projectDocument, out var dummy);
             return hasProjectNode;
         }
 
         public static XmlElement GetProjectElement(XmlDocument projectDocument)
         {
-            var hasProjectNode = ProjectXmlOperations.HasProjectElement(projectDocument, out var projectElement);
+            var hasProjectNode = ProjectXmlElementOperations.HasProjectElement(projectDocument, out var projectElement);
             if(!hasProjectNode)
             {
                 throw new Exception("Project document has no project node.");
@@ -50,13 +50,13 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw.XmlElements
 
         public static XmlElement AcquireProjectElement(XmlDocument projectDocument)
         {
-            var hasProjectNode = ProjectXmlOperations.HasProjectElement(projectDocument, out var projectElement);
+            var hasProjectNode = ProjectXmlElementOperations.HasProjectElement(projectDocument, out var projectElement);
             if(hasProjectNode)
             {
                 return projectElement;
             }
 
-            projectElement = ProjectXmlOperations.AddProjectElement(projectDocument);
+            projectElement = ProjectXmlElementOperations.AddProjectElement(projectDocument);
             return projectElement;
         }
 
