@@ -2,7 +2,7 @@
 using System.Xml;
 
 
-namespace R5T.Code.VisualStudio.ProjectFile.Raw
+namespace R5T.Code.VisualStudio.ProjectFile.Raw.XmlElements
 {
     /// <summary>
     /// Represents a Visual Studio project file.

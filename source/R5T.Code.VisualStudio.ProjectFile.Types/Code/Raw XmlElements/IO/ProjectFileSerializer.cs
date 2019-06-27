@@ -3,7 +3,7 @@
 using R5T.NetStandard.IO.Serialization;
 
 
-namespace R5T.Code.VisualStudio.ProjectFile.Raw
+namespace R5T.Code.VisualStudio.ProjectFile.Raw.XmlElements
 {
     public class ProjectFileSerializer : IFileSerializer<ProjectFileModel>
     {

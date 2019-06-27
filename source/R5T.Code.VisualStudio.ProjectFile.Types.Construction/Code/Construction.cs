@@ -1,6 +1,6 @@
 ﻿using System;
 
-using R5T.Code.VisualStudio.ProjectFile.Raw;
+using R5T.Code.VisualStudio.ProjectFile.Raw.XmlElements;
 
 
 namespace R5T.Code.VisualStudio.ProjectFile.Types.Construction
