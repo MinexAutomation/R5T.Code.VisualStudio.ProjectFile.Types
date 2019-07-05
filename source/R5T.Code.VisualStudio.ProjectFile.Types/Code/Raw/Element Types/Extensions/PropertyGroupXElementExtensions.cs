@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using R5T.NetStandard.Xml;
 
@@ -13,6 +14,55 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return projecFile;
         }
 
+        public static PropertyGroupXElement AddProperty(this PropertyGroupXElement propertyGroup, string propertyElementName, out TypedXElement element)
+        {
+            element = propertyGroup.Value.AddElement(propertyElementName).AsGeneralXElement();
+
+            return propertyGroup;
+        }
+
+        public static PropertyGroupXElement AddProperty(this PropertyGroupXElement propertyGroup, string propertyElementName)
+        {
+            propertyGroup.AddProperty(propertyElementName, out var _);
+
+            return propertyGroup;
+        }
+
+        public static bool HasProperty(this PropertyGroupXElement propertyGroup, string propertyElementName)
+        {
+            var output = propertyGroup.Value.Elements()
+                .Where(x => x.Name == propertyElementName)
+                .Any();
+            return output;
+        }
+
+        public static PropertyGroupXElement GetPropertyValue(this PropertyGroupXElement propertyGroup, string propertyElementName, out string value)
+        {
+            var element = propertyGroup.Value.Elements()
+                .Where(x => x.Name == propertyElementName)
+                .Single();
+
+            value = element.Value;
+
+            return propertyGroup;
+        }
+
+        public static string GetPropertyValue(this PropertyGroupXElement propertyGroup, string propertyElementName)
+        {
+            propertyGroup.GetPropertyValue(propertyElementName, out var value);
+
+            return value;
+        }
+
+        public static PropertyGroupXElement SetPropertyValue(this PropertyGroupXElement propertyGroup, string propertyElementName, string value)
+        {
+            var element = propertyGroup.Value.AcquireElement(propertyElementName);
+
+            element.Value = value;
+
+            return propertyGroup;
+        }
+
         public static PropertyGroupXElement AddTargetFramework(this PropertyGroupXElement propertyGroup, TargetFramework targetFramework, out TypedXElement targetFrameworkElement)
         {
             var standardString = targetFramework.ToStringStandard();
@@ -24,7 +74,8 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
 
         public static PropertyGroupXElement AddTargetFramework(this PropertyGroupXElement propertyGroup, TargetFramework targetFramework)
         {
-            propertyGroup.AddTargetFramework(targetFramework, out var dummy);
+            propertyGroup.AddTargetFramework(targetFramework, out var _);
+
             return propertyGroup;
         }
 
