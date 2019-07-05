@@ -169,6 +169,21 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return value;
         }
 
+        public static Version GetVersion(this ProjectFileModel projectFile)
+        {
+            var versionStr = projectFile.GetPropertyValue(ProjectFileXmlElementNames.Version);
+
+            var version = Version.Parse(versionStr);
+            return version;
+        }
+
+        public static void SetVersion(this ProjectFileModel projectFile, Version version)
+        {
+            var versionString = version.ToStringProjectFileStandard();
+
+            projectFile.SetPropertyValue(ProjectFileXmlElementNames.Version, versionString);
+        }
+
         public static ProjectFileModel AddPackageReference(this ProjectFileModel projectFile, string packageName, Version packageVersion)
         {
             var packageReferenceItemGroup = projectFile.AcquirePackageReferenceItemGroup();
