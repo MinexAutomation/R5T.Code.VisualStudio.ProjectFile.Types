@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -24,6 +25,23 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return output;
         }
 
+        public static bool HasPackageReferenceItemGroup(this ProjectFileModel projectFile)
+        {
+            var output = projectFile.ProjectElement.Value.Elements()
+                .Where(x => ProjectFileModelExtensions.IsPackageReferenceItemGroup(x))
+                .Any();
+            return output;
+        }
+
+        public static PackageReferenceItemGroupXElement GetPackageReferenceItemGroup(this ProjectFileModel projectFile)
+        {
+            var output = projectFile.ProjectElement.Value.Elements()
+                .Where(x => ProjectFileModelExtensions.IsPackageReferenceItemGroup(x))
+                .Single()
+                .AsPackageReferenceItemGroup();
+            return output;
+        }
+
         public static PackageReferenceItemGroupXElement AcquirePackageReferenceItemGroup(this ProjectFileModel projectFile)
         {
             var projectXElement = projectFile.ProjectElement.Value;
@@ -44,6 +62,23 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
                 xElement.Name == ProjectFileXmlElementNames.ItemGroup &&
                 xElement.HasElement(ProjectFileXmlElementNames.ProjectReference);
 
+            return output;
+        }
+
+        public static bool HasProjectReferenceItemGroup(this ProjectFileModel projectFile)
+        {
+            var output = projectFile.ProjectElement.Value.Elements()
+                .Where(x => ProjectFileModelExtensions.IsProjectReferenceItemGroup(x))
+                .Any();
+            return output;
+        }
+
+        public static ProjectReferenceItemGroupXElement GetProjectReferenceItemGroup(this ProjectFileModel projectFile)
+        {
+            var output = projectFile.ProjectElement.Value.Elements()
+                .Where(x => ProjectFileModelExtensions.IsProjectReferenceItemGroup(x))
+                .Single()
+                .AsProjectReferenceItemGroup();
             return output;
         }
 
@@ -79,6 +114,21 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return projectFile;
         }
 
+        public static IEnumerable<Tuple<string, Version>> GetPackageReferences(this ProjectFileModel projectFile)
+        {
+            if(projectFile.HasPackageReferenceItemGroup())
+            {
+                var packageReferenceItemGroup = projectFile.GetPackageReferenceItemGroup();
+
+                var packageReferences = packageReferenceItemGroup.GetPackageReferences();
+                return packageReferences;
+            }
+            else
+            {
+                return Enumerable.Empty<Tuple<string, Version>>();
+            }
+        }
+
         public static ProjectFileModel AddProjectReference(this ProjectFileModel projectFile, string projectFileRelativeProjectFilePath)
         {
             var projectReferenceItemGroup = projectFile.AcquireProjectReferenceItemGroup();
@@ -86,6 +136,21 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             projectReferenceItemGroup.AddProjectReference(projectFileRelativeProjectFilePath);
 
             return projectFile;
+        }
+
+        public static IEnumerable<string> GetProjectReferences(this ProjectFileModel projectFile)
+        {
+            if (projectFile.HasProjectReferenceItemGroup())
+            {
+                var projectReferenceItemGroup = projectFile.GetProjectReferenceItemGroup();
+
+                var projectReferences = projectReferenceItemGroup.GetProjectReferences();
+                return projectReferences;
+            }
+            else
+            {
+                return Enumerable.Empty<string>();
+            }
         }
     }
 }

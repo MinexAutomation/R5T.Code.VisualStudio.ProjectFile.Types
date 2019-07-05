@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 using R5T.NetStandard.Xml;
@@ -26,6 +28,18 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             packageReferenceItemGroup.AddPackageReference(packageName, packageVersion, out var dummy);
 
             return packageReferenceItemGroup;
+        }
+
+        public static IEnumerable<Tuple<string, Version>> GetPackageReferences(this PackageReferenceItemGroupXElement projectReferenceItemGroup)
+        {
+            foreach (var projectReferenceElement in projectReferenceItemGroup.Value.Elements().Where(x => x.Name == ProjectFileXmlElementNames.PackageReference))
+            {
+                var packageName = projectReferenceElement.Attribute(ProjectFileXmlAttributeNames.Include).Value;
+                var packageVersionStr = projectReferenceElement.Attribute(ProjectFileXmlAttributeNames.Version).Value;
+                var packageVersion = Version.Parse(packageVersionStr);
+
+                yield return Tuple.Create(packageName, packageVersion);
+            }
         }
     }
 }
