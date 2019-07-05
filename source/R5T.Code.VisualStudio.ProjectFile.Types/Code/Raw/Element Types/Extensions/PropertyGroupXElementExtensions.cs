@@ -106,9 +106,9 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
 
         public static PropertyGroupXElement SetVersion(this PropertyGroupXElement propertyGroup, Version version)
         {
-            var standardString = version.ToString();
+            var versionString = version.ToStringProjectFileStandard();
 
-            propertyGroup.Value.AcquireElement(ProjectFileXmlElementNames.Version, standardString);
+            propertyGroup.Value.AcquireElement(ProjectFileXmlElementNames.Version, versionString);
 
             return propertyGroup;
         }
