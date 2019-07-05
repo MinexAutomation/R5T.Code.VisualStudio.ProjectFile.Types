@@ -96,6 +96,28 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return projectReferenceItemGroup;
         }
 
+        public static bool IsPropertyGroup(XElement xElement)
+        {
+            var output = xElement.Name == ProjectFileXmlElementNames.PropertyGroup;
+            return output;
+        }
+
+        public static bool HasPropertyGroup(this ProjectFileModel projectFile)
+        {
+            var output = projectFile.ProjectElement.Value.Elements()
+                .Where(x => ProjectFileModelExtensions.IsPropertyGroup(x))
+                .Any();
+            return output;
+        }
+
+        public static PropertyGroupXElement GetPropertyGroup(this ProjectFileModel projectFile)
+        {
+            var output = projectFile.ProjectElement.Value.Elements()
+                .Single()
+                .AsPropertyGroup();
+            return output;
+        }
+
         public static PropertyGroupXElement AcquirePropertyGroup(this ProjectFileModel projectFile)
         {
             var propertyGroup = projectFile.ProjectElement.Value.AcquireElement(ProjectFileXmlElementNames.PropertyGroup).AsPropertyGroup();
@@ -103,6 +125,48 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             propertyGroup.ProjectElement = projectFile.ProjectElement;
 
             return propertyGroup;
+        }
+
+        public static bool HasProperty(this ProjectFileModel projectFile, string propertyElementName)
+        {
+            var hasPropertyGroup = projectFile.HasPropertyGroup();
+            if(!hasPropertyGroup)
+            {
+                return false;
+            }
+
+            var propertyGroup = projectFile.GetPropertyGroup();
+
+            var output = propertyGroup.HasProperty(propertyElementName);
+            return output;
+        }
+
+        public static bool HasProperty(this ProjectFileModel projectFile, XmlNodeName propertyName)
+        {
+            var output = projectFile.HasProperty(propertyName.Value);
+            return output;
+        }
+
+        public static void SetPropertyValue(this ProjectFileModel projectFile, string propertyElementName, string value)
+        {
+            projectFile.AcquirePropertyGroup().SetPropertyValue(propertyElementName, value);
+        }
+
+        public static void SetPropertyValue(this ProjectFileModel projectFile, XmlNodeName propertyName, string value)
+        {
+            projectFile.SetPropertyValue(propertyName.Value, value);
+        }
+
+        public static string GetPropertyValue(this ProjectFileModel projectFile, string propertyElementName)
+        {
+            var value = projectFile.GetPropertyGroup().GetPropertyValue(propertyElementName);
+            return value;
+        }
+
+        public static string GetPropertyValue(this ProjectFileModel projectFile, XmlNodeName propertyName)
+        {
+            var value = projectFile.GetPropertyValue(propertyName.Value);
+            return value;
         }
 
         public static ProjectFileModel AddPackageReference(this ProjectFileModel projectFile, string packageName, Version packageVersion)
