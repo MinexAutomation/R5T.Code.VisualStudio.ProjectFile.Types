@@ -42,6 +42,12 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return projectFile;
         }
 
+        public static ProjectFileModel Load(string projectFilePath)
+        {
+            var projectFile = ProjectFileModel.FromFile(projectFilePath);
+            return projectFile;
+        }
+
         public static ProjectFileModel FromXmlNode(XmlNode xmlNode)
         {
             var xElement = xmlNode.ToXElement();
