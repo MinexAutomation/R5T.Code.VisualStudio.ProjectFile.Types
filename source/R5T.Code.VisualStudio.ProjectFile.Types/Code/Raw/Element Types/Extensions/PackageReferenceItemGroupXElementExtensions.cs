@@ -10,6 +10,18 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
 {
     public static class PackageReferenceItemGroupXElementExtensions
     {
+        public static bool HasPackageReference(this PackageReferenceItemGroupXElement packageReferenceItemGroup, string packageName, Version packageVersion)
+        {
+            var versionString = packageVersion.ToStringProjectFileStandard();
+
+            var output = packageReferenceItemGroup.Value.Elements()
+                .Where(x => x.Name == ProjectFileXmlElementNames.PackageReference &&
+                    x.Attributes().Where(y => y.Name == ProjectFileXmlAttributeNames.Include && y.Value == packageName).Any() &&
+                    x.Attributes().Where(y => y.Name == ProjectFileXmlAttributeNames.Version && y.Value == versionString).Any())
+                .Any();
+            return output;
+        }
+
         public static PackageReferenceItemGroupXElement AddPackageReference(this PackageReferenceItemGroupXElement packageReferenceItemGroup, string packageName, Version packageVersion, out XElement packageReferenceXElement)
         {
             var versionStandardString = packageVersion.ToString();
@@ -40,6 +52,18 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
 
                 yield return Tuple.Create(packageName, packageVersion);
             }
+        }
+
+        public static void SetPackageReferenceVersion(this PackageReferenceItemGroupXElement packageReferenceItemGroup, string packageName, Version packageVersion)
+        {
+            var versionString = packageVersion.ToStringProjectFileStandard();
+
+            var packageReference = packageReferenceItemGroup.Value.Elements()
+                .Where(x => x.Name == ProjectFileXmlElementNames.PackageReference &&
+                    x.Attributes().Where(y => y.Name == ProjectFileXmlAttributeNames.Include && y.Value == packageName).Any())
+                .Single();
+
+            packageReference.Attribute(ProjectFileXmlAttributeNames.Version).Value = versionString;
         }
     }
 }

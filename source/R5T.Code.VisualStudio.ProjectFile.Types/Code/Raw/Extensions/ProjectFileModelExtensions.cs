@@ -113,6 +113,7 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
         public static PropertyGroupXElement GetPropertyGroup(this ProjectFileModel projectFile)
         {
             var output = projectFile.ProjectElement.Value.Elements()
+                .Where(x => ProjectFileModelExtensions.IsPropertyGroup(x))
                 .Single()
                 .AsPropertyGroup();
             return output;
@@ -206,6 +207,13 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             {
                 return Enumerable.Empty<Tuple<string, Version>>();
             }
+        }
+
+        public static void SetPackageReferenceVersion(this ProjectFileModel projectFile, string packageName, Version packageVersion)
+        {
+            var packageReferenceItemGroup = projectFile.AcquirePackageReferenceItemGroup();
+
+            packageReferenceItemGroup.SetPackageReferenceVersion(packageName, packageVersion);
         }
 
         public static ProjectFileModel AddProjectReference(this ProjectFileModel projectFile, string projectFileRelativeProjectFilePath)
