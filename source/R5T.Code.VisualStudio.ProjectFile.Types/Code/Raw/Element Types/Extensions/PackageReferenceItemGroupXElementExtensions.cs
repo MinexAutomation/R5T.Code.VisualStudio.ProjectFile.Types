@@ -65,5 +65,15 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
 
             packageReference.Attribute(ProjectFileXmlAttributeNames.Version).Value = versionString;
         }
+
+        public static void RemovePackageReference(this PackageReferenceItemGroupXElement packageReferenceItemGroup, string packageName)
+        {
+            var packageReferenceElement = packageReferenceItemGroup.Value.Elements()
+                .Where(x => x.Name == ProjectFileXmlElementNames.PackageReference &&
+                    x.Attributes().Where(y => y.Name == ProjectFileXmlAttributeNames.Include && y.Value == packageName).Any())
+                .Single();
+
+            packageReferenceElement.Remove();
+        }
     }
 }

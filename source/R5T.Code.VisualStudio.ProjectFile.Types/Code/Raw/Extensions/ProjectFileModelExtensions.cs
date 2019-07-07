@@ -194,6 +194,15 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return projectFile;
         }
 
+        public static ProjectFileModel RemovePackageReference(this ProjectFileModel projectFile, string packageName)
+        {
+            var packageReferenceItemGroup = projectFile.AcquirePackageReferenceItemGroup();
+
+            packageReferenceItemGroup.RemovePackageReference(packageName);
+
+            return projectFile;
+        }
+
         public static IEnumerable<Tuple<string, Version>> GetPackageReferences(this ProjectFileModel projectFile)
         {
             if(projectFile.HasPackageReferenceItemGroup())
