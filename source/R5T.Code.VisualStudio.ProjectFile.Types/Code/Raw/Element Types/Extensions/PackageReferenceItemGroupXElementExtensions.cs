@@ -14,10 +14,9 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
         {
             var versionString = packageVersion.ToStringProjectFileStandard();
 
-            var output = packageReferenceItemGroup.Value.Elements()
-                .Where(x => x.Name == ProjectFileXmlElementNames.PackageReference &&
-                    x.Attributes().Where(y => y.Name == ProjectFileXmlAttributeNames.Include && y.Value == packageName).Any() &&
-                    x.Attributes().Where(y => y.Name == ProjectFileXmlAttributeNames.Version && y.Value == versionString).Any())
+            var output = packageReferenceItemGroup.Value.Elements(ProjectFileXmlElementNames.PackageReference)
+                .Where(x => x.Attributes(ProjectFileXmlAttributeNames.Include).Where(y => y.Value == packageName).Any() &&
+                    x.Attributes(ProjectFileXmlAttributeNames.Version).Where(y => y.Value == versionString).Any())
                 .Any();
             return output;
         }
@@ -68,9 +67,8 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
 
         public static void RemovePackageReference(this PackageReferenceItemGroupXElement packageReferenceItemGroup, string packageName)
         {
-            var packageReferenceElement = packageReferenceItemGroup.Value.Elements()
-                .Where(x => x.Name == ProjectFileXmlElementNames.PackageReference &&
-                    x.Attributes().Where(y => y.Name == ProjectFileXmlAttributeNames.Include && y.Value == packageName).Any())
+            var packageReferenceElement = packageReferenceItemGroup.Value.Elements(ProjectFileXmlElementNames.PackageReference)
+                .Where(x => x.Attributes(ProjectFileXmlAttributeNames.Include).Where(y => y.Value == packageName).Any())
                 .Single();
 
             packageReferenceElement.Remove();

@@ -33,5 +33,14 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
                 yield return projectReferenceElement.Attribute(ProjectFileXmlAttributeNames.Include).Value;
             }
         }
+
+        public static void RemoveProjectReference(this ProjectReferenceItemGroupXElement projectReferenceItemGroup, string projectFileRelativeProjectFilePath)
+        {
+            var projectReferenceElement = projectReferenceItemGroup.Value.Elements(ProjectFileXmlElementNames.ProjectReference)
+                .Where(x => x.Attributes(ProjectFileXmlAttributeNames.Include).Where(y => y.Value == projectFileRelativeProjectFilePath).Any())
+                .Single();
+
+            projectReferenceElement.Remove();
+        }
     }
 }

@@ -234,6 +234,15 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return projectFile;
         }
 
+        public static ProjectFileModel RemoveProjectReference(this ProjectFileModel projectFile, string projectFileRelativeFilePath)
+        {
+            var projectReferenceItemGroup = projectFile.AcquireProjectReferenceItemGroup();
+
+            projectReferenceItemGroup.RemoveProjectReference(projectFileRelativeFilePath);
+
+            return projectFile;
+        }
+
         public static IEnumerable<string> GetProjectReferences(this ProjectFileModel projectFile)
         {
             if (projectFile.HasProjectReferenceItemGroup())
