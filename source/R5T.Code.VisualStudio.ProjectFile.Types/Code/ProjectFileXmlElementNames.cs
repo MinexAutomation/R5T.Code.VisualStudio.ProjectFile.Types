@@ -8,6 +8,7 @@ namespace R5T.Code.VisualStudio
 {
     public static class ProjectFileXmlElementNames
     {
+        public static readonly XmlNodeName GenerateAssemblyInfo = "GenerateAssemblyInfo".AsXmlNodeName();
         public static readonly XmlNodeName GenerateDocumentationFile = "GenerateDocumentationFile".AsXmlNodeName();
         public static readonly XmlNodeName ItemGroup = "ItemGroup".AsXmlNodeName();
         public static readonly XmlNodeName IsPackable = "IsPackable".AsXmlNodeName();

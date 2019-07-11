@@ -112,5 +112,14 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
 
             return propertyGroup;
         }
+
+        public static PropertyGroupXElement SetGenerateAssemblyInfo(this PropertyGroupXElement propertyGroup, bool generateAssemblyInfo)
+        {
+            var valueString = generateAssemblyInfo.ToString();
+
+            propertyGroup.Value.AcquireElement(ProjectFileXmlElementNames.GenerateAssemblyInfo, valueString);
+
+            return propertyGroup;
+        }
     }
 }
