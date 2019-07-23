@@ -6,6 +6,8 @@ using System.Xml.Linq;
 using R5T.NetStandard.Extensions;
 using R5T.NetStandard.Xml;
 
+using PathUtilities = R5T.NetStandard.IO.Paths.Utilities;
+
 
 namespace R5T.Code.VisualStudio.ProjectFile.Raw
 {
@@ -255,6 +257,62 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             else
             {
                 return Enumerable.Empty<string>();
+            }
+        }
+
+        public static IEnumerable<string> GetProjectReferenceDependencyFilePaths(this ProjectFileModel projectFileModel, string projectFilePath)
+        {
+            var projectDirectoryPath = PathUtilities.GetDirectoryPath(projectFilePath);
+
+            var output = projectFileModel.GetProjectReferenceDependencyFilePathsForProjectDirectory(projectDirectoryPath);
+            return output;
+        }
+
+        /// <summary>
+        /// The project reference relative file paths are relative to the project directory, not file path.
+        /// </summary>
+        public static IEnumerable<string> GetProjectReferenceDependencyFilePathsForProjectDirectory(this ProjectFileModel projectFileModel, string projectDirectoryPath)
+        {
+            var projectReferenceRelativeFilePaths = projectFileModel.GetProjectReferences();
+            foreach (var projectReferenceRelativeFilePath in projectReferenceRelativeFilePaths)
+            {
+                var projectFileUnresolvedPath = PathUtilities.Combine(projectDirectoryPath, projectReferenceRelativeFilePath);
+
+                var projectFilePath = PathUtilities.ResolveFilePath(projectFileUnresolvedPath);
+                yield return projectFilePath;
+            }
+        }
+
+        public static IEnumerable<string> GetProjectReferenceDependencyFilePathsRecursive(this ProjectFileModel projectFileModel, string projectFilePath)
+        {
+            var pathAccumulator = new HashSet<string>();
+
+            var output = projectFileModel.GetProjectReferenceDependencyFilePathsRecursive_Internal(projectFilePath, pathAccumulator);
+            return output;
+        }
+
+        private static IEnumerable<string> GetProjectReferenceDependencyFilePathsRecursive_Internal(this ProjectFileModel projectFileModel, string projectFilePath, HashSet<string> pathAccumulator)
+        {
+            var dependencyProjectFilePaths = projectFileModel.GetProjectReferenceDependencyFilePaths(projectFilePath);
+            foreach (var dependencyProjectFilePath in dependencyProjectFilePaths)
+            {
+                if(!pathAccumulator.Contains(dependencyProjectFilePath))
+                {
+                    pathAccumulator.Add(dependencyProjectFilePath);
+                    yield return dependencyProjectFilePath;
+                }
+
+                var dependencyProjectFile = ProjectFileSerialization.Deserialize(dependencyProjectFilePath);
+
+                var dependencyDependencyProjectFilePaths = dependencyProjectFile.GetProjectReferenceDependencyFilePathsRecursive(dependencyProjectFilePath);
+                foreach (var dependencyDependencyProjectFilePath in dependencyDependencyProjectFilePaths)
+                {
+                    if(!pathAccumulator.Contains(dependencyDependencyProjectFilePath))
+                    {
+                        pathAccumulator.Add(dependencyDependencyProjectFilePath);
+                        yield return dependencyDependencyProjectFilePath;
+                    }
+                }
             }
         }
     }
