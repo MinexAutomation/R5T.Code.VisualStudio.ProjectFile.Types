@@ -7,6 +7,7 @@ using R5T.NetStandard.Extensions;
 using R5T.NetStandard.Xml;
 
 using PathUtilities = R5T.NetStandard.IO.Paths.Utilities;
+using ProjectFileUtilities = R5T.Code.VisualStudio.ProjectFile.Types.Utilities;
 
 
 namespace R5T.Code.VisualStudio.ProjectFile.Raw
@@ -274,13 +275,9 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
         public static IEnumerable<string> GetProjectReferenceDependencyFilePathsForProjectDirectory(this ProjectFileModel projectFileModel, string projectDirectoryPath)
         {
             var projectReferenceRelativeFilePaths = projectFileModel.GetProjectReferences();
-            foreach (var projectReferenceRelativeFilePath in projectReferenceRelativeFilePaths)
-            {
-                var projectFileUnresolvedPath = PathUtilities.Combine(projectDirectoryPath, projectReferenceRelativeFilePath);
 
-                var projectFilePath = PathUtilities.ResolveFilePath(projectFileUnresolvedPath);
-                yield return projectFilePath;
-            }
+            var projectReferenceFilePaths = ProjectFileUtilities.GetProjectReferenceDependencyFilePathsForProjectDirectory(projectDirectoryPath, projectReferenceRelativeFilePaths);
+            return projectReferenceFilePaths;
         }
 
         public static IEnumerable<string> GetProjectReferenceDependencyFilePathsRecursive(this ProjectFileModel projectFileModel, string projectFilePath)
