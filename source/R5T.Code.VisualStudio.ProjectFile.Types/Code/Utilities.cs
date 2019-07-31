@@ -53,7 +53,7 @@ namespace R5T.Code.VisualStudio.ProjectFile.Types
         {
             var projectDirectoryPath = PathUtilities.GetDirectoryPath(projectFilePath);
 
-            var projectReferenceRelativeFilePaths = projectFile.GetProjectReferences();
+            var projectReferenceRelativeFilePaths = projectFile.GetProjectReferenceRelativePaths();
 
             var projectReferenceDependencyFilePaths = Utilities.GetProjectReferenceDependencyFilePathsForProjectDirectory(projectDirectoryPath, projectReferenceRelativeFilePaths);
             return projectReferenceDependencyFilePaths;
@@ -121,6 +121,30 @@ namespace R5T.Code.VisualStudio.ProjectFile.Types
                     yield return projectReferenceDependencyFilePath;
                 }
             }
+        }
+
+        /// <summary>
+        /// Adds the dependency project file as a project-reference dependency to the project file.
+        /// </summary>
+        public static void AddProjectReference(string projectFilePath, string dependencyProjectFilePath)
+        {
+            var projectFile = ProjectFileModel.Load(projectFilePath);
+
+            projectFile.AddProjectReference(projectFilePath, dependencyProjectFilePath);
+
+            projectFile.Save(projectFilePath);
+        }
+
+        /// <summary>
+        /// Get the file path relative to the project directory of the specified project file path for the specified file path.
+        /// Useful in determining 
+        /// </summary>
+        public static string GetProjectDirectoryRelativeFilePath(string projectFilePath, string filePath)
+        {
+            var projectDirectoryPath = PathUtilities.GetDirectoryPath(projectFilePath);
+
+            var relativeFilePath = PathUtilities.GetRelativePathDirectoryToFile(projectDirectoryPath, filePath);
+            return relativeFilePath;
         }
     }
 }

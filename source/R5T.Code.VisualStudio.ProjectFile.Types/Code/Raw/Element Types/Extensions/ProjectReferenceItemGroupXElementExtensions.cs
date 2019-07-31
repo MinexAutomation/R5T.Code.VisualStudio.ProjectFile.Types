@@ -26,7 +26,7 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return projectReferenceItemGroup;
         }
 
-        public static IEnumerable<string> GetProjectReferences(this ProjectReferenceItemGroupXElement projectReferenceItemGroup)
+        public static IEnumerable<string> GetProjectReferenceRelativePaths(this ProjectReferenceItemGroupXElement projectReferenceItemGroup)
         {
             foreach (var projectReferenceElement in projectReferenceItemGroup.Value.Elements().Where(x => x.Name == ProjectFileXmlElementNames.ProjectReference))
             {

@@ -237,6 +237,15 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return projectFile;
         }
 
+        public static ProjectFileModel AddProjectReference(this ProjectFileModel projectFile, string projectFilePath, string dependencyProjectFilePath)
+        {
+            var dependencyProjectRelativeFilePath = ProjectFileUtilities.GetProjectDirectoryRelativeFilePath(projectFilePath, dependencyProjectFilePath);
+
+            projectFile.AddProjectReference(dependencyProjectRelativeFilePath);
+
+            return projectFile;
+        }
+
         public static ProjectFileModel RemoveProjectReference(this ProjectFileModel projectFile, string projectFileRelativeFilePath)
         {
             var projectReferenceItemGroup = projectFile.AcquireProjectReferenceItemGroup();
@@ -246,14 +255,14 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return projectFile;
         }
 
-        public static IEnumerable<string> GetProjectReferences(this ProjectFileModel projectFile)
+        public static IEnumerable<string> GetProjectReferenceRelativePaths(this ProjectFileModel projectFile)
         {
             if (projectFile.HasProjectReferenceItemGroup())
             {
                 var projectReferenceItemGroup = projectFile.GetProjectReferenceItemGroup();
 
-                var projectReferences = projectReferenceItemGroup.GetProjectReferences();
-                return projectReferences;
+                var projectReferenceRelativePaths = projectReferenceItemGroup.GetProjectReferenceRelativePaths();
+                return projectReferenceRelativePaths;
             }
             else
             {
@@ -274,7 +283,7 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
         /// </summary>
         public static IEnumerable<string> GetProjectReferenceDependencyFilePathsForProjectDirectory(this ProjectFileModel projectFileModel, string projectDirectoryPath)
         {
-            var projectReferenceRelativeFilePaths = projectFileModel.GetProjectReferences();
+            var projectReferenceRelativeFilePaths = projectFileModel.GetProjectReferenceRelativePaths();
 
             var projectReferenceFilePaths = ProjectFileUtilities.GetProjectReferenceDependencyFilePathsForProjectDirectory(projectDirectoryPath, projectReferenceRelativeFilePaths);
             return projectReferenceFilePaths;
