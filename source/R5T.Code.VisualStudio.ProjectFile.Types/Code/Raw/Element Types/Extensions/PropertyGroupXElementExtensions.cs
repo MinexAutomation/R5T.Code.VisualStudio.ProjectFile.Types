@@ -28,6 +28,15 @@ namespace R5T.Code.VisualStudio.ProjectFile.Raw
             return propertyGroup;
         }
 
+        public static PropertyGroupXElement AddProperty(this PropertyGroupXElement propertyGroup, string propertyElementName, string propertyElementValue)
+        {
+            propertyGroup.AddProperty(propertyElementName, out var propertyElement);
+
+            propertyElement.Value.Value = propertyElementValue;
+
+            return propertyGroup;
+        }
+
         public static bool HasProperty(this PropertyGroupXElement propertyGroup, string propertyElementName)
         {
             var output = propertyGroup.Value.Elements()
